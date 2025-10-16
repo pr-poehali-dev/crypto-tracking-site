@@ -96,15 +96,20 @@ const CryptoMarkets = () => {
 
   return (
     <div className="grid gap-4">
-      <Card className="bg-white/95 backdrop-blur">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Icon name="TrendingUp" size={24} />
-            Рынок криптовалют
+      <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border-white/20 shadow-2xl">
+        <CardHeader className="border-b border-white/10">
+          <CardTitle className="flex items-center gap-3 text-white">
+            <div className="p-2 bg-gradient-to-br from-primary to-secondary rounded-lg">
+              <Icon name="TrendingUp" size={24} />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold">Рынок криптовалют</h2>
+              <p className="text-sm text-white/60 font-normal mt-1">{cryptos.length} активных монет</p>
+            </div>
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
+        <CardContent className="pt-6">
+          <div className="space-y-3">
             {cryptos.map((crypto) => {
               const chartData = generateMockChart();
               const change = (Math.random() - 0.5) * 10;
@@ -113,27 +118,28 @@ const CryptoMarkets = () => {
               return (
                 <div
                   key={crypto.id}
-                  className="flex items-center justify-between p-4 rounded-lg border border-slate-200 hover:border-primary hover:shadow-lg transition-all"
+                  className="group flex items-center justify-between p-4 rounded-xl bg-gradient-to-r from-white/10 to-white/5 border border-white/10 hover:border-primary/50 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 backdrop-blur-sm"
                 >
                   <div className="flex items-center gap-4 flex-1">
-                    <div className="w-12 h-12 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center">
-                      <span className="text-white font-bold text-lg">
+                    <div className="relative w-14 h-14 bg-gradient-to-br from-primary via-secondary to-primary rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                      <div className="absolute inset-0 bg-gradient-to-br from-primary to-secondary rounded-full animate-pulse opacity-50"></div>
+                      <span className="relative text-white font-bold text-xl">
                         {crypto.symbol.charAt(0)}
                       </span>
                     </div>
                     <div>
-                      <h3 className="font-bold text-lg">{crypto.name}</h3>
-                      <p className="text-sm text-slate-500">{crypto.symbol}</p>
+                      <h3 className="font-bold text-lg text-white group-hover:text-primary transition-colors">{crypto.name}</h3>
+                      <p className="text-sm text-white/60 font-mono">{crypto.symbol}</p>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-6">
                     <div className="text-right">
-                      <p className="font-mono text-lg font-bold">
-                        ${crypto.price_usd.toFixed(2)}
+                      <p className="font-mono text-xl font-bold text-white">
+                        ${crypto.price_usd.toLocaleString()}
                       </p>
-                      <p className="text-sm text-slate-500">
-                        {crypto.price_stars.toFixed(2)} ⭐
+                      <p className="text-sm text-white/60 font-mono">
+                        {crypto.price_stars.toFixed(4)} ⭐
                       </p>
                     </div>
 
@@ -141,8 +147,11 @@ const CryptoMarkets = () => {
                       {renderSparkline(chartData)}
                     </div>
 
-                    <Badge variant={isPositive ? 'default' : 'destructive'} className="min-w-20">
-                      <Icon name={isPositive ? 'TrendingUp' : 'TrendingDown'} size={14} className="mr-1" />
+                    <Badge 
+                      variant={isPositive ? 'default' : 'destructive'} 
+                      className="min-w-24 h-8 text-base font-bold shadow-lg"
+                    >
+                      <Icon name={isPositive ? 'TrendingUp' : 'TrendingDown'} size={16} className="mr-1" />
                       {isPositive ? '+' : ''}{change.toFixed(2)}%
                     </Badge>
                   </div>

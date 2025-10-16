@@ -52,106 +52,37 @@ const TradingPanel = ({ userId }: { userId: number }) => {
     const price = currency === 'stars' ? selectedCrypto.price_stars : selectedCrypto.price_usd;
     const total = parseFloat(amount) * price;
 
-    toast({
-      title: type === 'buy' ? 'Покупка' : 'Продажа',
-      description: `${amount} ${selectedCrypto.symbol} за ${total.toFixed(2)} ${currency === 'stars' ? '⭐' : '$'}`,
-    });
+    if (currency === 'stars') {
+      toast({
+        title: type === 'buy' ? 'Покупка за Telegram Stars' : 'Продажа за Telegram Stars',
+        description: `Для оплаты ${total.toFixed(2)} ⭐ напишите @azepinov в Telegram`,
+        duration: 8000
+      });
+    } else {
+      toast({
+        title: type === 'buy' ? 'Покупка' : 'Продажа',
+        description: `${amount} ${selectedCrypto.symbol} за $${total.toFixed(2)}`,
+      });
+    }
 
     setAmount('');
   };
 
   return (
     <div className="grid lg:grid-cols-2 gap-6">
-      <Card className="bg-white/95 backdrop-blur">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Icon name="ArrowUpCircle" size={24} className="text-secondary" />
-            Покупка
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <label className="text-sm font-medium mb-2 block">Криптовалюта</label>
-            <Select
-              value={selectedCrypto?.id.toString()}
-              onValueChange={(value) => {
-                const crypto = cryptos.find(c => c.id.toString() === value);
-                setSelectedCrypto(crypto || null);
-              }}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {cryptos.map((crypto) => (
-                  <SelectItem key={crypto.id} value={crypto.id.toString()}>
-                    {crypto.name} ({crypto.symbol})
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div>
-            <label className="text-sm font-medium mb-2 block">Валюта оплаты</label>
-            <Select value={currency} onValueChange={(value: 'usd' | 'stars') => setCurrency(value)}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="stars">Telegram Stars ⭐</SelectItem>
-                <SelectItem value="usd">US Dollars $</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div>
-            <label className="text-sm font-medium mb-2 block">Количество</label>
-            <Input
-              type="number"
-              placeholder="0.00"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              className="font-mono text-lg"
-            />
-          </div>
-
-          {selectedCrypto && amount && (
-            <div className="p-4 bg-slate-100 rounded-lg">
-              <div className="flex justify-between text-sm mb-1">
-                <span>Цена за 1 {selectedCrypto.symbol}:</span>
-                <span className="font-mono font-bold">
-                  {(currency === 'stars' ? selectedCrypto.price_stars : selectedCrypto.price_usd).toFixed(2)}
-                  {currency === 'stars' ? ' ⭐' : ' $'}
-                </span>
-              </div>
-              <div className="flex justify-between text-lg font-bold">
-                <span>Итого:</span>
-                <span className="font-mono text-primary">
-                  {(parseFloat(amount) * (currency === 'stars' ? selectedCrypto.price_stars : selectedCrypto.price_usd)).toFixed(2)}
-                  {currency === 'stars' ? ' ⭐' : ' $'}
-                </span>
-              </div>
+      <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border-white/20 shadow-2xl overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-secondary via-primary to-secondary"></div>
+        <CardHeader className="border-b border-white/10">
+          <CardTitle className="flex items-center gap-3 text-white">
+            <div className="p-2 bg-gradient-to-br from-secondary to-green-400 rounded-lg shadow-lg">
+              <Icon name="ArrowUpCircle" size={24} />
             </div>
-          )}
-
-          <Button onClick={() => handleTrade('buy')} className="w-full h-12 text-lg">
-            <Icon name="ShoppingCart" size={20} className="mr-2" />
-            Купить
-          </Button>
-        </CardContent>
-      </Card>
-
-      <Card className="bg-white/95 backdrop-blur">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Icon name="ArrowDownCircle" size={24} className="text-destructive" />
-            Продажа
+            <span className="text-2xl">Покупка</span>
           </CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 pt-6">
           <div>
-            <label className="text-sm font-medium mb-2 block">Криптовалюта</label>
+            <label className="text-sm font-medium mb-2 block text-white/80">Криптовалюта</label>
             <Select
               value={selectedCrypto?.id.toString()}
               onValueChange={(value) => {
@@ -173,7 +104,7 @@ const TradingPanel = ({ userId }: { userId: number }) => {
           </div>
 
           <div>
-            <label className="text-sm font-medium mb-2 block">Получить в</label>
+            <label className="text-sm font-medium mb-2 block text-white/80">Валюта оплаты</label>
             <Select value={currency} onValueChange={(value: 'usd' | 'stars') => setCurrency(value)}>
               <SelectTrigger>
                 <SelectValue />
@@ -197,16 +128,16 @@ const TradingPanel = ({ userId }: { userId: number }) => {
           </div>
 
           {selectedCrypto && amount && (
-            <div className="p-4 bg-slate-100 rounded-lg">
-              <div className="flex justify-between text-sm mb-1">
+            <div className="p-5 bg-gradient-to-br from-white/20 to-white/10 rounded-xl border border-white/20 backdrop-blur-sm">
+              <div className="flex justify-between text-sm mb-2 text-white/70">
                 <span>Цена за 1 {selectedCrypto.symbol}:</span>
-                <span className="font-mono font-bold">
+                <span className="font-mono font-bold text-white">
                   {(currency === 'stars' ? selectedCrypto.price_stars : selectedCrypto.price_usd).toFixed(2)}
                   {currency === 'stars' ? ' ⭐' : ' $'}
                 </span>
               </div>
-              <div className="flex justify-between text-lg font-bold">
-                <span>Получите:</span>
+              <div className="flex justify-between text-xl font-bold">
+                <span className="text-white">Итого:</span>
                 <span className="font-mono text-secondary">
                   {(parseFloat(amount) * (currency === 'stars' ? selectedCrypto.price_stars : selectedCrypto.price_usd)).toFixed(2)}
                   {currency === 'stars' ? ' ⭐' : ' $'}
@@ -215,7 +146,90 @@ const TradingPanel = ({ userId }: { userId: number }) => {
             </div>
           )}
 
-          <Button onClick={() => handleTrade('sell')} variant="destructive" className="w-full h-12 text-lg">
+          <Button onClick={() => handleTrade('buy')} className="w-full h-14 text-lg font-bold bg-gradient-to-r from-secondary to-green-400 hover:from-secondary/90 hover:to-green-400/90 shadow-xl hover:shadow-2xl transition-all duration-300">
+            <Icon name="ShoppingCart" size={20} className="mr-2" />
+            Купить
+          </Button>
+        </CardContent>
+      </Card>
+
+      <Card className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border-white/20 shadow-2xl overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 via-orange-500 to-red-500"></div>
+        <CardHeader className="border-b border-white/10">
+          <CardTitle className="flex items-center gap-3 text-white">
+            <div className="p-2 bg-gradient-to-br from-red-500 to-orange-500 rounded-lg shadow-lg">
+              <Icon name="ArrowDownCircle" size={24} />
+            </div>
+            <span className="text-2xl">Продажа</span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4 pt-6">
+          <div>
+            <label className="text-sm font-medium mb-2 block text-white/80">Криптовалюта</label>
+            <Select
+              value={selectedCrypto?.id.toString()}
+              onValueChange={(value) => {
+                const crypto = cryptos.find(c => c.id.toString() === value);
+                setSelectedCrypto(crypto || null);
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {cryptos.map((crypto) => (
+                  <SelectItem key={crypto.id} value={crypto.id.toString()}>
+                    {crypto.name} ({crypto.symbol})
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <label className="text-sm font-medium mb-2 block text-white/80">Получить в</label>
+            <Select value={currency} onValueChange={(value: 'usd' | 'stars') => setCurrency(value)}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="stars">Telegram Stars ⭐</SelectItem>
+                <SelectItem value="usd">US Dollars $</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div>
+            <label className="text-sm font-medium mb-2 block text-white/80">Количество</label>
+            <Input
+              type="number"
+              placeholder="0.00"
+              value={amount}
+              onChange={(e) => setAmount(e.target.value)}
+              className="font-mono text-lg h-12 bg-white/10 border-white/20 text-white placeholder:text-white/40"
+            />
+          </div>
+
+          {selectedCrypto && amount && (
+            <div className="p-5 bg-gradient-to-br from-white/20 to-white/10 rounded-xl border border-white/20 backdrop-blur-sm">
+              <div className="flex justify-between text-sm mb-2 text-white/70">
+                <span>Цена за 1 {selectedCrypto.symbol}:</span>
+                <span className="font-mono font-bold text-white">
+                  {(currency === 'stars' ? selectedCrypto.price_stars : selectedCrypto.price_usd).toFixed(2)}
+                  {currency === 'stars' ? ' ⭐' : ' $'}
+                </span>
+              </div>
+              <div className="flex justify-between text-xl font-bold">
+                <span className="text-white">Получите:</span>
+                <span className="font-mono text-orange-400">
+                  {(parseFloat(amount) * (currency === 'stars' ? selectedCrypto.price_stars : selectedCrypto.price_usd)).toFixed(2)}
+                  {currency === 'stars' ? ' ⭐' : ' $'}
+                </span>
+              </div>
+            </div>
+          )}
+
+          <Button onClick={() => handleTrade('sell')} className="w-full h-14 text-lg font-bold bg-gradient-to-r from-red-500 to-orange-500 hover:from-red-600 hover:to-orange-600 shadow-xl hover:shadow-2xl transition-all duration-300">
             <Icon name="TrendingDown" size={20} className="mr-2" />
             Продать
           </Button>
