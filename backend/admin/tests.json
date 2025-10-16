@@ -1,0 +1,14 @@
+{
+  "tests": [
+    {
+      "name": "Get users list as admin",
+      "method": "GET",
+      "path": "/",
+      "headers": {
+        "X-User-Id": "1"
+      },
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
+    }
+  ]
+}
