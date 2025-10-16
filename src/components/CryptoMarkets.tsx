@@ -121,11 +121,24 @@ const CryptoMarkets = () => {
                   className="group flex items-center justify-between p-4 rounded-xl bg-gradient-to-r from-white/10 to-white/5 border border-white/10 hover:border-primary/50 hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 backdrop-blur-sm"
                 >
                   <div className="flex items-center gap-4 flex-1">
-                    <div className="relative w-14 h-14 bg-gradient-to-br from-primary via-secondary to-primary rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-                      <div className="absolute inset-0 bg-gradient-to-br from-primary to-secondary rounded-full animate-pulse opacity-50"></div>
-                      <span className="relative text-white font-bold text-xl">
-                        {crypto.symbol.charAt(0)}
-                      </span>
+                    <div className="relative w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300 p-2">
+                      <img 
+                        src={`https://cryptologos.cc/logos/${crypto.name.toLowerCase().replace(/\s+/g, '-')}-${crypto.symbol.toLowerCase()}-logo.png`}
+                        alt={crypto.name}
+                        className="w-full h-full object-contain"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          const parent = target.parentElement;
+                          if (parent) {
+                            parent.classList.add('bg-gradient-to-br', 'from-primary', 'via-secondary', 'to-primary');
+                            const span = document.createElement('span');
+                            span.className = 'text-white font-bold text-xl';
+                            span.textContent = crypto.symbol.charAt(0);
+                            parent.appendChild(span);
+                          }
+                        }}
+                      />
                     </div>
                     <div>
                       <h3 className="font-bold text-lg text-white group-hover:text-primary transition-colors">{crypto.name}</h3>

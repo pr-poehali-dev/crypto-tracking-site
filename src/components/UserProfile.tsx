@@ -39,8 +39,24 @@ const UserProfile = ({ userId }: { userId: number }) => {
                 className="flex items-center justify-between p-4 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-primary to-secondary rounded-full flex items-center justify-center">
-                    <span className="text-white font-bold">{balance.symbol.charAt(0)}</span>
+                  <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center p-1.5">
+                    <img 
+                      src={`https://cryptologos.cc/logos/${balance.crypto.toLowerCase().replace(/\s+/g, '-')}-${balance.symbol.toLowerCase()}-logo.png`}
+                      alt={balance.crypto}
+                      className="w-full h-full object-contain"
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                        const parent = target.parentElement;
+                        if (parent) {
+                          parent.classList.add('bg-gradient-to-br', 'from-primary', 'to-secondary');
+                          const span = document.createElement('span');
+                          span.className = 'text-white font-bold text-sm';
+                          span.textContent = balance.symbol.charAt(0);
+                          parent.appendChild(span);
+                        }
+                      }}
+                    />
                   </div>
                   <div>
                     <p className="font-bold">{balance.crypto}</p>
